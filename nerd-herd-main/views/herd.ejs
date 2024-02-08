@@ -1,0 +1,148 @@
+<div class="container-fluid">
+  <div class="row">
+    <div id="nav-wrapper" class="col-2">
+      <%- include('./partials/sidebar-nav') %>
+    </div>
+
+    <div class="col-md-7 align-items-center p-5">
+      <div class="row">
+        <div class="col-6">
+          <h4 class="event-card-title">
+            <strong>
+              <%= herd.herdName %>
+            </strong>
+          </h4>
+        </div>
+        <div class="col-3">
+          <p class="event-card-user float-end me-0">
+            Herd owner: <em>
+              <%= herd.owner.username %>
+            </em>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <p class="event-card-description col-7">
+          <%= herd.herdDescription %>
+        </p>
+      </div>
+
+      <div class="row">
+        <h4>Gatherings:</h4>
+        <ul class="list-group">
+        <% herd.gatherings.forEach((event)=>{ %>
+          <li class="list-group-item w-100"><a href="/event/<%=event._id %>" style="text-decoration:none;color:inherit"><%=event.eventTitle%></a></li>
+        <% }) %>
+      </ul>
+      </div>
+    </div>
+    <div id="herdMemberWrapper" class="col-3">
+      <% if (userId && herd.owner._id && userId.toString()===herd.owner._id.toString()) { %>
+        <form id="deleteGathering" action="/herd/<%= herd._id %>?_method=DELETE" method="POST">
+          <input type="hidden" name="_method" value="DELETE">
+          <button class="btn btn-danger w-75 m-1" id="deleteBtn" type="submit">
+            Disband This Herd
+          </button>
+        </form>
+        <button id="editBtn" class="btn btn-secondary w-75 m-1" data-bs-toggle="modal"
+          data-bs-target="#myEditHerdModal">
+          Edit <%= herd.herdName %>
+        </button>
+        <% } %>
+
+
+          <h3>Members</h3>
+          <div id="herdMemberContent" class="d-flex flex-column">
+            <% herd.members.forEach((member)=> { %>
+              <a href="/profile/<%= member._id %>" style="color:inherit;text-decoration:none;width:100%">
+                <div class="card col-8 text-center py-2 my-1 mx-2">
+                  <p><em>
+                      <%= member.username %>
+                    </em></p>
+                </div>
+              </a>
+              <% }) %>
+          </div>
+          <% if(herd.invitedMembers.length> 0) { %>
+            <h3>Invites</h3>
+            <div id="herdInvitesContent" class="d-flex flex-column">
+              <% herd.invitedMembers.forEach((member)=> { %>
+                <a href="/profile/<%= member._id %>" style="color:inherit;text-decoration:none;width:100%">
+                  <div class="card col-8 text-center py-2 my-1 mx-2">
+                    <p><em>
+                        <%= member.username %>
+                      </em></p>
+                  </div>
+                </a>
+                <% }) %>
+            </div>
+            <% } %>
+              <button class="btn btn-primary w-75 my-5" data-bs-toggle="modal" data-bs-target="#myAddMemberModal">Invite
+                Members!</button>
+    </div>
+  </div>
+</div>
+
+<!--Modal Windows-->
+
+<div class="modal fade" id="myAddMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMemberModalLabel">Add a Nerd!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- <form id="addMemberForm" action="" method="POST" style="display:none"> -->
+      <form id="addInviteForm" action="/herd/inviteEmail/<%= herd._id %>?_method=PUT" method="POST">
+        <div class="modal-body">
+          <input type="hidden" name="_method" value="PUT">
+          <div class="mb-3">
+            <label for="nerdEmail" class="form-label">Enter E-Mail of member to add:</label>
+            <input type="email" class="form-control" id="nerdEmail" name="nerdEmail" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Invite! </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myEditHerdModal" tabindex="-1" aria-labelledby="editHerdModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editHerdModalLabel">Edit Herd</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="editHerdForm" action="/herd/<%= herd._id %>?_method=PUT" method="POST" style="display:none">
+        <div class="modal-body">
+          <input type="hidden" name="_method" value="PUT">
+          <div class="mb-3 form-group">
+            <input type="hidden" name="_method" value="PUT">
+            <label for="herdName">Herd name:</label>
+            <input type="text" id="herdName" name="newHerdName" class="form-control">
+            <label for="herdDescription">Herd description:</label>
+            <input type="text" id="herdDescription" name="newHerdDescription" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Edit! </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const showEdit = document.getElementById('editBtn')
+  const editForm = document.getElementById('editHerdForm')
+
+  showEdit.addEventListener('click', () => {
+    editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none'
+  })
+</script>

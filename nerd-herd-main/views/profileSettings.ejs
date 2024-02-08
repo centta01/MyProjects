@@ -1,0 +1,91 @@
+<main class="row">
+  <div id="nav-wrapper" class="col-md-2 bg-dark">
+    <%- include('./partials/sidebar-nav') %>
+  </div>
+  <div class="col-5 border rounded px-3 mx-4">
+    <h1><%= user.username %></h1>
+    <p class=""><%= user.email %></p>
+    <h4 class="float-end"><%= user.firstName %> <%= user.lastName %></h4>
+    <% if (userId && user._id && userId.toString() === user._id.toString()) { %>
+      <form method="POST" action="/profile/<%= clientUser._id %>?_method=DELETE">
+        <input type="hidden" name="_method" value="DELETE">
+        <div style="padding-top:2.5px; padding-bottom:2.5px;">
+        <button type="submit">
+          Delete Profile
+        </button>
+      </div>
+      </form>
+      <div style="padding-top:2.5px; padding-bottom:2.5px;">
+      <button id="editBtn">
+        Edit profile
+      </button>
+    </div>
+    <div class="row">
+      <form id="editProfileForm" action="/profile/<%= user._id %>?_method=PUT" method="POST" style="display:none">
+
+      <div class="py-2 col";>
+        <input type="hidden" name="_method" value="PUT">
+        <label for="username" style="padding-left:2px; ">Username:</label>
+        <input type="text" id="username" name="newUsername" style="padding-right:2px;">
+        <label for="firstname">First name:</label>
+        <input type="text" id="firstname" name="newFirstname">
+        <label for="lastname">Last name:</label>
+        <input type="text" id="lastname" name="newLastname">
+      </div>
+    <div class="py-2 col">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="newEmail">
+        <label for="phoneNum">Phone Number:</label>
+        <input type="text" id="phoneNum" name="newNum">
+        <label for="providerSelection">Cell Provider:</label>
+        <select class="form-select phone-provider p-1 w-25" id="providerSelection" name="newProvider"
+            aria-label="Floating label select example;" style="display: inline-block;border-color: black; border-radius: 0;">
+          <option></option>
+          <option value="AT&T">AT&T</option>
+          <option value="BoostMobile">BoostMobile</option>
+          <option value="Cricket">Cricket Wireless</option>
+          <option value="GoogleFi">GoogleFi Wireless</option>
+          <option value="Metro">Metro by T-Mobile</option>
+          <option value="MintMobile">MintMobile</option>
+          <option value="SimpleMobile">Simple Mobile</option>
+          <option value="Sprint">Sprint</option>
+          <option value="T-Mobile">T-Mobile US</option>
+          <option value="Tello">Tello</option>
+          <option value="USMobile">US Mobile</option>
+          <option value="UScellular">UScellular</option>
+          <option value="Verizon">Verizon</option>
+          <option value="XFinityMobile">XFinity Mobile</option>
+        </select>
+      </div>
+      <div style="padding-top:2.5px; padding-bottom:2.5px;">
+      </div>
+      <div class= "py-2 col" style="padding-top:2.5px; padding-bottom:2.5px;">
+        <label for="birthday">Birthday:</label>
+        <input id="startDate" name="birthday" placeholder="" class="form-control birthday m-0 w-25"
+          type="date" style="display: inline-block; height: 30px;border-color: black" />
+        <button type="submit">Submit Changes</button>
+      </div>
+      </form>
+    </div>
+    <% } %>
+  </div>
+  <div class="col-2">
+    <h3>Herds</h3>
+    <% uHerds.forEach((herd) => { %>
+      <a href="/herd/<%= herd.herdId %>" style="color:inherit;text-decoration:none">
+        <div class="card w-75 m-2 p-1">
+          <p><%= herd.herdName %></p>
+        </div>
+      </a>
+    <% }) %>
+
+  </div>
+</main>
+<script>
+  const showEdit = document.getElementById('editBtn')
+  const editForm = document.getElementById('editProfileForm')
+
+  showEdit.addEventListener('click', () => {
+    editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none'
+  })
+</script>

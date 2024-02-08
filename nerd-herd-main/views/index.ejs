@@ -1,0 +1,150 @@
+<main class="container-fluid">
+  <div class="row">
+
+    <div id="nav-wrapper" class="col-md-2 bg-dark">
+      <%- include('./partials/sidebar-nav') %>
+    </div>
+
+    <div class="col-md-6 align-items-center event-container p-0 mx-3">
+      <h4 style="text-align:center;border-bottom:2px solid #DFDFDF" class="bg-light sticky-top p-2"> Local Events Feed
+      </h4>
+      <% eventList.forEach( async (event)=> { %>
+        <div class="row event-card mb-3 mx-2">
+          <div class="row">
+            <div class="col-12">
+              
+                <h4 class="event-card-title">
+                  <a href="/event/<%= event.eventId %>" style="text-decoration:none;color:inherit">
+                  <strong>
+                    <%= event.eventTitle %>
+                  </strong></a> in
+                  <a href="/event/<%= event.eventId %>" style="text-decoration:none;color:inherit"><i>
+                    <%= event.eventHerd.herdName %>
+                  </i></a>
+                </h4>
+              
+            </div>
+          </div>
+          <div class="row">
+            <p class="event-card-description col-10">
+              <%= event.eventDescription %>
+            </p>
+          </div>
+          <div class="row">
+            <div class="col-3 offset-1">
+              <p><strong>
+                  Location: 
+                </strong>
+                <%= event.eventLocation %></p>
+            </div>
+            <div class="col-4">
+              <p>
+                <% if (event.eventDate) { %>
+                  <%= event.eventDate.toLocaleString() %>
+                    <% } else { %> No Date <% } %>
+              </p>
+            </div>
+            <div class="col-3">
+              <p class="event-card-user float-end me-0">
+                Event Creator: <em>
+                  <%= event.userCreated %>
+                </em>
+              </p>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+    </div>
+
+    <div id="sidebarRightContainer" class="col-md-3 align-items-center px-1">
+      <div id="myEventsWrapper" class="col-md-12 align-items-center">
+        <h4 style="text-align:center;border-bottom:2px solid #DFDFDF" class="bg-light p-2 m-0">My Upcoming Events</h4>
+        <div id="upcomingEventsContainer" class="pt-2 px-1 sidebarRight">
+          <% userEvents.forEach( (event)=> { %>
+            <div class="row event-card mb-2 mx-1">
+              <div class="col-4">
+                <h5 class="event-card-title">
+                  <a href="/event/<%= event.uEventId %>" style="text-decoration:none;color:inherit">
+                    <%= event.uEventTitle %>
+                  </a>
+                </h5>
+              </div>
+              <div class="col-8">
+                <p>When: <% if (event.uEventTime) { %>
+                    <%= event.uEventTime.toLocaleString() %>
+                      <% } else { %> No Date <% } %>
+                </p>
+              </div>
+              <div class="col-12">
+                <p>
+                  Location: <%= event.uEventLocation %>, <%= event.uEventAddress %>
+                </p>
+              </div>
+              <div class="col-12">
+                <p>Going</p>
+              </div>
+            </div>
+            <% }) %>
+        </div>
+      </div>
+      <div id="myHerdsWrapper" class="col-md-12 align-items-center mt-4">
+        <h4 style="text-align:center;border-bottom:2px solid #DFDFDF" class="bg-light p-2 m-0">My Herds</h4>
+        <div id="myHerds" class="pt-2 px-1 sidebarRight">
+          <% herds.forEach( (herd)=> { %>
+            <a href="/herd/<%= herd.herdId %>" style="text-decoration:none;color:inherit">
+              <div class="row event-card mb-2 mx-1">
+                <div class="col-12">
+                  <h5 class="event-card-title">
+                    <%= herd.herdName %>
+                  </h5>
+                </div>
+              </div>
+            </a>
+
+            <% }) %>
+        </div>
+        <% if(user.herdInvites.length> 0) {%>
+          <div class="col-12 mt-5">
+            <h4 style="text-align:center;border-bottom:2px solid #DFDFDF" class="bg-light p-2 m-0">Invites</h4>
+            <% user.herdInvites.forEach((herd)=> { %>
+              <form id="invitesForm_<%= herd%>" action="" method="POST">
+                <input type="hidden" name="herdId" value="<%= herd.id%>">
+                <input type="hidden" name="userId" value="<%= user.id%>">
+                <div class="buttons-container d-flex align-items-center justify-content-end">
+                  <div class="card w-100 m-2 p-3">
+                    <div class="invite-details">
+                      <p>
+                        <%= herd.herdName %>
+                      </p>
+                    </div>
+                  </div>
+                  <button class="btn btn-success accept-button m-2"
+                    onclick="submitForm(this, 'accepted')">Accept</button>
+                  <button class="btn btn-danger decline-button" onclick="submitForm(this, 'declined')">Decline</button>
+                </div>
+              </form>
+              <% }) %>
+          </div>
+          <% } %>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    function submitForm(button, decision) {
+
+      let form = button.closest('form')
+
+      // Set the action dynamically based on the decision
+      if (decision === "accepted") {
+        form.action = "/profile/acceptHerdInvite";
+      } else if (decision === "declined") {
+        form.action = "/profile/declineHerdInvite";
+      }
+
+      // Submit the form
+      form.submit();
+    }
+  </script>
+</main>

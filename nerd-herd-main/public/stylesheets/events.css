@@ -1,0 +1,47 @@
+.event-card-description {
+  display: inherit;
+  padding: 5px;
+  background: #f0f0f0;
+  outline: 2px solid #DFDFDF;
+  border-radius: 10px;
+  margin-left: 3em;
+  min-height: 75px;
+  max-height: 250px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.event-container {
+  margin-top: 10px;
+  padding: 20px;
+  border: 2px solid #DFDFDF;
+  min-height: 500px;
+  max-height: 750px;
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.event-card {
+  background: #FFF;
+  padding-bottom: 10px;
+  outline: 2px solid #DFDFDF;
+  border-radius: 10px;
+}
+
+#sidebarRightContainer {
+  max-height: 750px;
+}
+
+#myEventsWrapper {
+  border: 2px solid #DFDFDF;
+}
+
+#myHerdsWrapper {
+  border: 2px solid #DFDFDF;
+}
+
+.sidebarRight {
+  overflow-y: scroll;
+  max-height: 300px;
+}

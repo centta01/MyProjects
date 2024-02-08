@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%=title%>
+  </title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/events.css">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
+</head>
+
+<body>
+  <header>
+    <container-fluid>
+      <div class="row bg-light" style="padding: 30px 0;">
+        <div class="col-10" style="text-align: center;">
+          <h1 style="text-align: center; font-weight: bolder;"><a class="no-dec text-dark" href="/"><img
+                src="/images/nerd_herd_logo.png" height="65px" /> NerdHerd.io</a></h1>
+        </div>
+        <% if (loggedIn) { %>
+          <!-- Render the logged-in user partial -->
+          <%- include('./partials/logged_in') %>
+        <% } else { %>
+          <!-- Render the guest user partial -->
+          <%- include('./partials/guest') %>
+        <% } %>
+      </div>
+    </container-fluid>
+  </header>
+
+  <div id="LayoutContentWrapper">
+    <%- include(content) %>
+  </div>
+
+</body>
+<script src="/javascripts/bootstrap.bundle.min.js"></script>
+</html>

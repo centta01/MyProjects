@@ -1,0 +1,88 @@
+<div class="bg-dark">
+  <h1 class="bg-dark text-light text-center">
+    <%= title %>
+  </h1>
+  <main class="form-signin bg-dark text-center">
+    <link href="/stylesheets/signin.css" rel="stylesheet" type="text/css">
+    <div class="signBody bg-dark">
+      <form onsubmit="return validatePassword(this)" action="/register" method="post">
+
+        <img class="mb-4" src="images/logo.png" alt="Logo" width="250">
+        <h1 class="h3 mb-3 fw-normal text-light">Welcome!</h1>
+        <div class="form-floating ">
+          <input type="email" class="form-control bg-secondary m-0" id="floatingInput" placeholder="name@example.com"
+            name="uid" required="required" style="border-color: black;">
+          <label for="floatingInput">Email Address</label>
+        </div>
+        <div class="form-floating ">
+          <input type="username" class="form-control bg-secondary m-0" id="floatingInput" placeholder="Username"
+            name="username" required="required" style="border-color: black;border-radius: 0;">
+          <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating ">
+          <input type="password" class="form-control bg-secondary m-0" id="passwordOne" placeholder="Password"
+            name="password" required="required" style="border-color: black;border-radius: 0;">
+          <label for="floatingPassword">Password</label>
+          <small id="passwordChecker" class="password-error d-none bg-secondary m-0" style="color: red;">Passwords do not match</small>
+        </div>
+        <div class="form-floating ">
+          <input type="password" class="form-control bg-secondary confirm-password m-0" id="confirmPassword"
+            placeholder="Confirm Password" name="confirmedPassword" required="required"
+            style="border-color: black;border-radius: 0; ">
+          <label for="floatingPassword">Confirm Password</label>
+        </div>
+        <div class="form-floating ">
+          <input type="firstname" class="form-control bg-secondary first-name m-0" id="firstName"
+            placeholder="FirstName" name="firstname" required="required"
+            style="border-color: black;border-radius: 0; ">
+          <label for="floatingInput">First Name</label>
+        </div>
+        <div class="form-floating ">
+          <input type="lastname" class="form-control bg-secondary last-name m-0" id="floatingInput"
+            placeholder="LastName" name="lastname" required="required" style="border-color: black;border-radius: 0; ">
+          <label for="floatingInput">Last Name</label>
+        </div>
+        <div class="form-floating ">
+          <input type="phonenumber" class="form-control bg-secondary phone-number m-0" id="floatingInput"
+            placeholder="PhoneNumber" name="phonenumber" required="required"
+            style="border-color: black;border-radius: 0; ">
+          <label for="floatingInput">Phone Number</label>
+        </div>
+        <div class="form-floating">
+          <select class="form-select bg-secondary phone-provider m-0" id="floatingSelect" name="phoneprovider"
+            aria-label="Floating label select example; background-color: black" style="border-color: black; 
+            background-color: black; border-radius: 0;" required="required">
+          <option></option>
+          <option value="AT&T">AT&T</option>
+          <option value="BoostMobile">BoostMobile</option>
+          <option value="Cricket">Cricket Wireless</option>
+          <option value="GoogleFi">GoogleFi Wireless</option>
+          <option value="Metro">Metro by T-Mobile</option>
+          <option value="MintMobile">MintMobile</option>
+          <option value="SimpleMobile">Simple Mobile</option>
+          <option value="Sprint">Sprint</option>
+          <option value="T-Mobile">T-Mobile US</option>
+          <option value="Tello">Tello</option>
+          <option value="USMobile">US Mobile</option>
+          <option value="UScellular">UScellular</option>
+          <option value="Verizon">Verizon</option>
+          <option value="XFinityMobile">XFinity Mobile</option>
+        </select>
+        <label for="floatingSelect">Cell Phone Provider</label>
+      </div>
+      <div class="form-floating">
+        <input id="startDate" name="birthday" placeholder="" class="form-control bg-secondary birthday m-0"
+          type="date" style="border-color: black;border-top-left-radius: 0;border-top-right-radius: 
+          0;border-bottom-left-radius: 5; border-bottom-right-radius: 5;" />
+          <span id="startDateSelected"></span>
+          <label  for="startDate">Birthday</label>
+        </div>
+        <div>
+          <input type="submit" value="Sign Up" class="w-50 btn btn-primary" />
+        </div>
+      </form>
+    </div class="signBody">
+    <script type="text/javascript" src="/javascripts/create_user.js">
+    </script>
+  </main>
+</div>

@@ -1,0 +1,36 @@
+<div class="bg-dark">
+  <h1 class="bg-dark text-light text-center">
+    <%= title %>
+  </h1>
+  <main class="form-signin bg-dark text-center">
+    <link href="/stylesheets/signin.css" rel="stylesheet" type="text/css" />
+    <div class="signBody bg-dark">
+      <form action="/login" method="post">
+        <img class="mb-4" src="images/logo.png" alt="Logo" width="250">
+        <h1 class="h3 mb-3 fw-normal text-light">Welcome back!</h1>
+
+        <div class="form-floating ">
+          <input type="email" class="form-control bg-secondary" id="floatingInput" placeholder="name@example.com"
+            name="username" style="border-color: black;">
+
+          <label for="floatingInput">Email address</label>
+
+        </div>
+        <div class="form-floating ">
+          <input type="password" class="form-control bg-secondary" id="floatingPassword" placeholder="Password"
+            name="password" required="required" style="border-color: black;">
+          <label for="floatingPassword">Password</label>
+        </div>
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> <label class="text-light">Remember me</label>
+          </label>
+        </div>
+        <input type="submit" value="Log In" class="w-50 btn btn-primary" />
+      </form>
+
+      <p class="text-light">Don't have an account? Become a Nerd <a href="/register">here</a></p> </br>
+      <p><a href="/recovery">Trouble logging in?</a></p>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,43 @@
+<div class="bg-dark">
+  <h1 class="bg-dark text-light text-center">
+    <%= title %>
+  </h1>
+  <main class="form-signin bg-dark text-center">
+    <link href="/stylesheets/signin.css" rel="stylesheet" type="text/css" />
+    <div class="signBody bg-dark">
+      <form action="/recovery" method="post">
+        <img class="mb-4" src="images/logo.png" alt="Logo" width="250">
+        <p id="errorLabel" class="text-danger" style="visibility: hidden;">*Confirm that both emails match*</p>
+
+        <div class="form-floating ">
+          <input type="email" class="form-control bg-secondary" id="uid" placeholder="name@example.com" name="uid"
+            style="border-color: black;">
+
+          <label for="uid">Email address</label>
+
+        </div>
+        <div class="form-floating ">
+          <input type="email" class="form-control bg-secondary" id="uidConfirm" placeholder="" name="uidConfirm"
+            required="required" style="border-color: black;">
+
+          <label for="uidConfirm">Confirm email address</label>
+
+        </div>
+        <input type="submit" value="Submit" class="w-50 btn btn-primary" onclick="return validateForm()" />
+      </form>
+    </div>
+  </main>
+</div>
+<script>
+  function validateForm() {
+    const emailField = document.getElementById("uid")
+    const emailConfirmField = document.getElementById("uidConfirm")
+    const errorLabel = document.getElementById("errorLabel")
+
+    if (emailField.value !== emailConfirmField.value) {
+      errorLabel.style.visibility = "visible";
+      return false;
+    }
+    return true;
+  }
+</script>

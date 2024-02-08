@@ -1,0 +1,363 @@
+<div class="container-fluid">
+  <div class="row">
+    <div id="nav-wrapper" class="col-2">
+      <%- include('./partials/sidebar-nav') %>
+    </div>
+
+    <div class="col-md-7 align-items-center px-5">
+      <div class="row">
+        <div class="col-6">
+          <h4 class="event-card-title">
+            <strong>
+              <%= event.eventTitle %>
+            </strong>
+            in
+            <strong>
+              <%=event.eventHerd.herdName %>
+            </strong>
+          </h4>
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <p>
+            <%= event.eventDate.toLocaleString() %>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <p class="event-card-description col-10">
+          <%= event.eventDescription %>
+        </p>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p><strong>
+              <%= event.eventLocation %>
+            </strong></p>
+          <p>
+            <%= event.eventAddress %>
+          </p>
+        </div>
+        <div class="col-3">
+          <p class="event-card-user float-end me-0">
+            Gathering Creator: <em>
+              <%= event.userCreated.username %>
+            </em>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <hr class="my-4" />
+        <div class="col-5">
+          <h2 class="mb-4">Event Polls</h2>
+          <% event.eventPolls.forEach(function(poll) { %>
+
+            <form action="/eventPollResponse" onsubmit="return validatePollResponse(this)" method="POST">
+              <input type="hidden" name="pollUserId" value="<%=userId %>">
+              <input type="hidden" name="pollEventId" value="<%=event._id%>">
+              <input type="hidden" name="pollId" value="<%=poll._id %>">
+              <input type="hidden" name="selection" value="">
+
+              <div class="mb-4">
+                <h3>
+                  <%= poll.title %>
+                </h3>
+                <div class="">
+                  <ul class="list-group">
+                    <% poll.selections.forEach(function(selection) { %>
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <label class="form-check">
+                          <input type="radio" name="selectedOption" value="<%= selection.phrase %>"
+                            class="form-check-input">
+                          <%= selection.phrase %>
+                        </label>
+                        <span class="">
+                          <%= selection.votes.length %>
+                        </span>
+                      </li>
+
+                      <% }); %>
+                  </ul>
+                </div>
+                <button class="btn btn-secondary justify-end" type="submit">Vote</button>
+              </div>
+            </form>
+            <hr class="my-4"> 
+            <% }); %>
+        </div>
+
+        <div class="col-5">
+          <h2 class="mb-4">All Event Rolls</h2>
+
+          <ul class="list-group">
+            <% event.eventRolls.forEach(function(eventRoll) { %>
+              <form action="/eventRollResponse" onsubmit="return alreadyRolled(this)" method="POST">
+                <input type="hidden" value="<%=eventRoll._id%>" name="eventRollId" />
+                <input type="hidden" value="<%= userId%>" name="userId" />
+                <input type="hidden" value="<%= event._id %>" name="eventId" />
+                <input type="hidden" name="rollValue" value="" id="rollValue" />
+
+                <li class="list-group-item">
+                  <h3 class="mb-3">
+                    <%= eventRoll.title %>
+                  </h3>
+                  <button type="submit" class="btn btn-secondary w-100">Roll!</button>
+                  <ul class="list-unstyled">
+                    <% eventRoll.roll.forEach(function(roll) { %>
+                      <li>
+                        <span class="font-weight-bold">User:</span>
+                        <%= roll.user.username %> |
+                          <span class="font-weight-bold">Value:</span>
+                          <%= roll.value %>
+                      </li>
+                      <% }); %>
+                  </ul>
+                </li>
+              </form>
+
+              <% }); %>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="">
+        <ul class="list-group">
+
+          <% if (userId && event.userCreated && userId.toString()===event.userCreated._id.toString()) { %>
+            <form id="deleteGathering" action="/event/<%= event.eventId %>?_method=DELETE" method="POST">
+              <input type="hidden" name="_method" value="DELETE">
+              <button id="deleteBtn" class="btn btn-danger w-100 m-1 " type="submit">
+                Delete This Event
+              </button>
+            </form>
+            <button class="btn btn-secondary w-100 m-1" id="editBtn" data-bs-toggle="modal"
+              data-bs-target="#myEditModal">
+              Edit This Gathering
+            </button>
+            <% } %>
+
+              <button class="btn btn-info  w-100 m-1" data-bs-toggle="modal" data-bs-target="#myModal">New Roll</button>
+              <button class="btn btn-warning  w-100 m-1" data-bs-toggle="modal" data-bs-target="#myPollModal">New
+                Poll</button>
+        </ul>
+        <div class="justify-content-between mt-5">
+          <h2>Participation</h2>
+          <div class="">
+            <h2></h2>
+            <form action="/eventResponse" method="POST">
+              <input type="hidden" id="user_Id" name="user_Id" value="<%= userId %>" />
+              <input type="hidden" id="event_Id" name="event_Id" value="<%= event.id %>" />
+              <input type="hidden" id="response" name="response" value="" />
+              <span>
+                <button class="btn btn-success accept-button m-2 w-45" onclick="submitForm(this, 'accepted')">I'm
+                  Going!</button>
+                <button class="btn btn-danger decline-button w-45" onclick="submitForm(this, 'declined')">Not
+                  going.</button>
+              </span>
+            </form>
+          </div>
+          <ul class="list-group">
+            <% event.eventNerdResponses.forEach(function(item) { %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <%= item.user.username %>
+                  <span class="badge 
+                    <% if (item.status == 'Pending') { %>
+                      bg-primary 
+                  <% } else if (item.status== 'Going') { %>
+                      bg-success
+                  <% } else { %>
+                      bg-danger
+                  <% } %>">
+                    <%= item.status %>
+                  </span>
+              </li>
+              <% }); %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODALS -->
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create a roll off for the event!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/eventCreateRoll" method="POST">
+        <input type="hidden" name="rollUserId" value="<%=userId%>" />
+        <input type="hidden" name="rollEventId" value="<%=event.id%>" />
+
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="rollText">What are Nerds Rolling for?</label>
+            <input type="text" class="form-control" id="rollText" name="rollText" placeholder="Enter text">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Create Roll Off!</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="myPollModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create a roll off for the event!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/eventCreatePoll" onsubmit="return gatherPollOptions(this)" method="POST">
+        <input type="hidden" name="pollEventId" value="<%=event.id%>" />
+        <input type="hidden" name="optionsConcatenated" value="" />
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="rollText">What is your poll?</label>
+            <input type="text" class="form-control" id="pollTitle" name="pollTitle" placeholder="Enter text" required>
+            <span class="justify-content-between justify-content-end">
+              <label for="option1">Enter Your Options:</label>
+              <button type="button" class="btn btn-info" onclick="addPollOption()">Add Option</button>
+            </span>
+            <div id="optionsTable">
+              <input type="text" class="form-control" id="option1" name="option1" placeholder="Enter text" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Create Poll!</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myEditModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit This gathering</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="editEventForm" action="/event/<%= event.eventId %>?_method=PUT" method="POST" style="display:none">
+        <div class="modal-body">
+          <input type="hidden" name="_method" value="PUT">
+          <div class="form-group">
+            <label for="eventTitle">Event title:</label>
+            <input id="eventTitle" type="text" name="newEventName" class="form-control" required>
+            <div class="invalid-feedback">
+              Please provide a valid event title.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventDescription">Event description:</label>
+            <input type="text" id="eventDescription" name="newEventDescription" class="form-control">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Edit </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const showEdit = document.getElementById('editBtn')
+  const editForm = document.getElementById('editEventForm')
+
+  showEdit.addEventListener('click', () => {
+    editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none'
+  })
+
+  function submitForm(button, decision) {
+
+    let form = button.closest('form')
+
+    // Set the action dynamically based on the decision
+    if (decision === "accepted") {
+      form.response.value = "Going"
+    } else if (decision === "declined") {
+      form.response.value = "Not Going"
+    }
+
+    // Submit the form
+    form.submit()
+  }
+
+  function addPollOption() {
+    let optionsTable = document.getElementById('optionsTable')
+
+    let newInput = document.createElement('input')
+    newInput.setAttribute('type', 'text')
+    newInput.setAttribute('class', 'form-control')
+    newInput.setAttribute('id', 'option' + (optionsTable.children.length / 2 + 1))
+    newInput.setAttribute('name', 'option' + (optionsTable.children.length / 2 + 1))
+    newInput.setAttribute('required', 'true')
+    newInput.setAttribute('placeholder', 'Enter text')
+
+    optionsTable.appendChild(newInput)
+
+    return false
+  }
+
+  function gatherPollOptions(form) {
+    // Get all input elements within the optionsTable
+    let optionsInputs = document.getElementById('optionsTable').querySelectorAll('input')
+
+    // Array to store option values
+    let optionValues = []
+
+    // Iterate through the input elements and push their values to the array
+    optionsInputs.forEach(function (input) {
+      optionValues.push(input.value)
+    });
+
+    // Set the concatenated option values to the hidden input
+    form.elements['optionsConcatenated'].value = optionValues.join(';')
+
+    // Continue with the form submission
+    return true
+  }
+
+
+  function alreadyRolled(form) {
+    let randomInteger = Math.floor(Math.random() * 20) + 1
+    form.rollValue.value = randomInteger
+
+    return true
+  }
+
+  function validatePollResponse(form) {
+
+    let selectedOption = form.querySelector('input[name="selectedOption"]:checked');
+
+    if (selectedOption) {
+      form.selection.value = selectedOption.value;
+    }
+    else {
+      alert("You must make a selection before voting!")
+      return false
+    }
+
+    return true
+  }
+
+</script>

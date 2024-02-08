@@ -1,0 +1,61 @@
+<main>
+  <div id="nav-wrapper" class="col-md-2 bg-dark">
+    <%- include('./partials/sidebar-nav') %>
+  </div>
+  <div class="container-fluid">
+    <div class="row mt-5">
+      <div class="col-md-3"></div>
+      <form class="col-md-5" method="POST" action="/create_herd">
+
+        <!-- TODO: Live check from DB if name is available -->
+        <!-- TODO: Random name suggestion generator -->
+        <div class="mb-3">
+          <label for="herdName" class="form-label">Herd Name</label>
+          <input type="text" class="form-control" id="herdName" name="herdName" placeholder="" required="true">
+
+        </div>
+        <div class="mb-3">
+          <label for="herdDescription" class="form-label">Herd Description - Provide a description of your
+            herd that others can see.
+          </label>
+          <textarea class="form-control" id="herdDescription" name="herdDescription" rows="3"></textarea>
+        </div>
+        <label class="mb-3">Herd Visibility</label><br>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="radio" name="herdVisibility" value="public" id="flexRadioDefault1">
+          <label class="form-check-label" for="flexRadioDefault1">
+            Public
+          </label>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="radio" name="herdVisibility" value="private" id="flexRadioDefault2" checked="true">
+          <label class="form-check-label" for="flexRadioDefault2">
+            Private
+          </label>
+        </div>
+        <div>
+          <label>
+            Invite other Nerds to join your Herd!
+          </label>
+          <div class="input-group mb-3">
+            <span class="input-group-text">E-mail</span>
+            <input id="email_text_input" type="email" class="form-control" placeholder="Email">
+          </div>
+          <button type="button" onclick="addToEmailList()" class="btn btn-secondary mb-3">Add Nerd To Invite
+            List</button>
+        </div>
+        <input type="hidden" id="email_invite_list" name="email_invite_list"/>
+
+        <div class="d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary mb-3">Submit</button>
+        </div>
+      </form>
+
+      <div id="invitees_div" class="col-md-4 flex-column justify-content-center ">
+
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="/javascripts/create_herd.js">
+  </script>
+</main>
